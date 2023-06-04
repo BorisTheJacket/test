@@ -3,7 +3,7 @@ from model import QuizQuestion
 from schemas import QuizSchema
 
 
-def get_data(db:Session):
+def get_questions(db:Session, question_num:int):
     return db.query(QuizQuestion).all()
 
 
