@@ -1,20 +1,23 @@
-from sqlalchemy.orm import Session
+from repository import QuestionsRepository
 from model import QuizQuestion
-from schemas import QuizSchema
+import requests
 
 
-def get_questions(db:Session, question_num:int):
-    return db.query(QuizQuestion).all()
-
-
-def create_questions(db:Session, question: QuizQuestion):
-    _question = QuizQuestion(
-        question_id=question.question_id,
-        question_description=question.question_description,
-        answer_description=question.answer_description,
-        created_at=question.created_at
-    )
-    db.add(_question)
-    db.commit()
-    db.refresh(_question)
-    return _question
+class QuizService():
+    def __init__(self, repository:QuestionsRepository):
+        self.repository = repository
+    
+    def get_questions(self, question_num):
+        response = requests.get(f'https://jservice.io/api/random?count={question_num}')
+        list_of_questions = response.json()
+        print(list_of_questions)
+        for question in list_of_questions:
+            _question = QuizQuestion(
+                id = question['id'],
+                # question_id=question['id'],
+                question_description=question['question'],
+                answer_description=question['answer'],
+                created_at=question['created_at']
+            )    
+            self.repository.create_question(_question)
+        return response.json()

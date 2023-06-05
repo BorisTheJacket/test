@@ -1,12 +1,19 @@
 from sqlalchemy import Column, Integer, String, Date
-from config import Base
+from sqlalchemy.ext.declarative import declarative_base
 
+Base = declarative_base()
+
+table_name = 'quiz_questions'
 
 class QuizQuestion(Base):
-    __tablename__ = 'Quiz questions'
-
+    __tablename__ = table_name
+    
     id=Column(Integer, primary_key=True)
-    question_id=Column(Integer)
+    # question_id=Column(Integer)
     question_description=Column(String)
     answer_description=Column(String)
     created_at=Column(Date)
+
+
+
+    
